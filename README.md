@@ -56,8 +56,8 @@ An event-driven FreeRTOS project on the STM32F407G Discovery board that demonstr
 
 | Peripheral | STM32 Pin | Function |
 |---|---|---|
-| UART TX | `<PIN>` (`<USARTx>`) | Data to host / USB-TTL RX |
-| UART RX | `<PIN>` (`<USARTx>`) | Data from host / USB-TTL TX |
+| UART TX | PA2 | Data to host / USB-TTL RX |
+| UART RX | PA3 | Data from host / USB-TTL TX |
 | User Button | PA0 | Emergency interrupt (rising edge) |
 | Green LED | PD12 | Command task activity |
 | Red LED | PD14 | Emergency task activity |
