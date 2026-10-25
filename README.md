@@ -85,4 +85,6 @@ Connect TX to the adapter's RX and RX to the adapter's TX (crossed), and share G
 
 ## Example Output
 
-![Cutecom output](docs/cutecom_output.png)
+<p align="center">
+  <img src="docs/cutecom_output.png" alt="Cutecom output" width="600">
+</p>
