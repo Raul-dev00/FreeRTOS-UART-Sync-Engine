@@ -1,0 +1,17 @@
+# Derleme çıktıları
+Debug/
+Release/
+*.o
+*.d
+*.elf
+*.map
+*.bin
+*.hex
+*.list
+*.su
+*.cyclo
+*.srec
+
+# IDE'ye özel
+.settings/
+.metadata/
