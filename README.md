@@ -22,7 +22,7 @@ An event-driven FreeRTOS project on the STM32F407G Discovery board that demonstr
 
 1. **Sensor Task (Priority 1, every 500 ms):**
    - Woken by an auto-reload software timer through a binary semaphore.
-   - Generates a simulated temperature value (80 - 120) using the hardware RNG and prints `Heat is: <value>`.
+   - Generates a simulated temperature value (100 - 120) using the hardware RNG and prints `Heat is: <value>`.
    - Toggles the Blue LED (PD15).
 
 2. **Telemetry / Command Task (Priority 2):**
@@ -32,7 +32,7 @@ An event-driven FreeRTOS project on the STM32F407G Discovery board that demonstr
 3. **Emergency Task (Priority 3):**
    - Woken by the user button (PA0) EXTI interrupt through a binary semaphore.
    - Prints `Emergency interrupt!` and toggles the Red LED (PD14).
-   - Button presses are debounced in the ISR with a 50 ms window.
+   - Button presses are debounced in the ISR with a 500 ms window.
 
 ### Synchronization Primitives Used
 
@@ -48,7 +48,7 @@ An event-driven FreeRTOS project on the STM32F407G Discovery board that demonstr
 
 - **ISR vs. task API:** `xSemaphoreGiveFromISR` is used inside interrupt callbacks, while tasks use the blocking `xSemaphoreTake`. An early version called `xSemaphoreTakeFromISR` inside tasks; it never blocks, so the highest-priority task spun forever and starved the timer and lower-priority tasks.
 - **Shared UART protection:** Three tasks print to the same UART. Without protection, a higher-priority task preempting a transmission gets `HAL_BUSY` and its message is silently lost. A mutex wrapper (`uart_print`) serializes access, and priority inheritance prevents priority inversion.
-- **Button debounce:** The mechanical bounce of PA0 produced several interrupts per press. The EXTI callback ignores events within 50 ms of the last accepted one.
+- **Button debounce:** The mechanical bounce of PA0 produced several interrupts per press. The EXTI callback ignores events within 500 ms of the last accepted one.
 - **Interrupt priorities:** EXTI and USART interrupt priorities are kept numerically at or above `configMAX_SYSCALL_INTERRUPT_PRIORITY`, so FreeRTOS `FromISR` calls are safe.
 - **Serial debugging:** Garbled or missing output was finally traced to swapped RX/TX wires; verifying the UART in isolation (without the RTOS) made this easy to separate from RTOS issues.
 
@@ -60,7 +60,6 @@ An event-driven FreeRTOS project on the STM32F407G Discovery board that demonstr
 | UART RX | `<PIN>` (`<USARTx>`) | Data from host / USB-TTL TX |
 | User Button | PA0 | Emergency interrupt (rising edge) |
 | Green LED | PD12 | Command task activity |
-| Orange LED | PD13 | Unused |
 | Red LED | PD14 | Emergency task activity |
 | Blue LED | PD15 | Sensor task activity |
 
